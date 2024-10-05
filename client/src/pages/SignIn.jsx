@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { signInStart, signInSuccess, signInFailure } from "../redux/user/userSlice";
-
+import OAuth from "../components/OAuth";
 
 
 const SignIn = () => {
@@ -79,6 +79,8 @@ const SignIn = () => {
           </button>
         </div>
 
+        <OAuth />
+
         <div className="text-sm text-center mb-8">
           <p>
             Du hast noch kein Konto?{" "}
@@ -88,7 +90,9 @@ const SignIn = () => {
           </p>
         </div>
       </div>
+      
     </div>
+    
   );
 };
 
