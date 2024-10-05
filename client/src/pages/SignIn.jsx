@@ -1,19 +1,24 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
+import { useDispatch, useSelector } from "react-redux";
+import { signInStart, signInSuccess, signInFailure } from "../redux/user/userSlice";
+
+
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
+  // const [error, setError] = useState("");
+  // const [loading, setLoading] = useState(false);
+  const {loading, error} = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async () => {
-    setError("");
-    setLoading(true);
+    
+    // setLoading(true);
+    dispatch(signInStart());
     const url = `${BASE_URL}/auth/signin`;
     const response = await fetch(url, {
       method: "POST",
@@ -26,11 +31,14 @@ const SignIn = () => {
 
     const data = await response.json();
     if (!data.success) {
-      setError(data.message);
-      setLoading(false);
+      // setError(data.message);
+      // setLoading(false);
+      dispatch(signInFailure(data.message));
       return;
     }
-    setLoading(false);
+    // setLoading(false);
+    // setError("");
+    dispatch(signInSuccess(data.user));
     navigate("/home");
   };
 
