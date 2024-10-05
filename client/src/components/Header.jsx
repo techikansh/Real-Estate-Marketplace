@@ -11,7 +11,7 @@ const Header = () => {
     }
   
     return (
-    <header className="drop-shadow-lg bg-slate-800">
+    <header className="drop-shadow-lg  bg-black py-3">
       <div className="flex flex-wrap  text-center items-center p-3 space-x-4 justify-between mx-4">
         <div className="text-2xl sm:text-3xl font-bold text-white">Estate Markt</div>
         
@@ -20,12 +20,12 @@ const Header = () => {
           onChange = {(e) => {setSearch(e.target.value)}}/>
           
           {search && (
-            <GiCrossedSabres className="text-2xl mr-2" onClick={() => setSearch("")}/>
+            <GiCrossedSabres className="text-2xl mr-2 hover:cursor-pointer" onClick={() => setSearch("")}/>
           )}
-          <IoMdSearch className="text-2xl" onClick={() => {handleSearch()}}/>
+          <IoMdSearch className="text-2xl hover:cursor-pointer" onClick={() => {handleSearch()}}/>
         </div>
 
-        <div className="flex flex-wrap justify-evenly text-white space-x-4 text-xl">
+        <div className="flex flex-wrap justify-evenly text-white space-x-4 text-xl font-semibold">
           <div className="hidden lg:inline hover:text-gray-400">Home</div>
           <div className="hidden lg:inline hover:text-gray-400">Über Uns</div>
           <div className="hover:text-gray-400">Einloggen</div>
