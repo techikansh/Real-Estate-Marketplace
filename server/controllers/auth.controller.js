@@ -27,8 +27,8 @@ export async function signup(req, res, next) {
 
 export async function signin(req, res, next) {
     const { email, password } = req.body;
-
     try {
+
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({
@@ -45,18 +45,14 @@ export async function signin(req, res, next) {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
             expiresIn: "1h",
         });
+        const { password: userPassword, ...rest } = user._doc;
         return res
             .cookie("access_token", token, { httpOnly: true })
             .status(200)
             .json({
                 success: true,
                 message: "Login erfolgreich",
-                user: {
-                    id: user._id,
-                    username: user.username,
-                    email: user.email,
-                    avatar: user.avatar,
-                },
+                user: rest
             });
     } catch (error) {
         next();
@@ -69,18 +65,14 @@ export async function google(req, res, next) {
         const user = await User.findOne({email});
         if (user) { // Signin
             const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: "1h"});
+            const { password, ...rest } = user._doc;
             return res
                     .cookie("access_token", token, { httpOnly: true })
                     .status(200)
                     .json({
                         success: true,
                         message: "Login erfolgreich",
-                        user: {
-                            id: user._id,
-                            username: user.username,
-                            email: user.email,
-                            avatar: user.avatar,
-                        },
+                        user: rest
                     });
         }
         else{ // Signup
@@ -93,18 +85,14 @@ export async function google(req, res, next) {
                 avatar: image,
             });
             const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET, {expiresIn: "1h"});
+            const { password, ...rest } = newUser._doc;
             return res
                     .cookie("access_token", token, { httpOnly: true })
                     .status(200)
                     .json({
                         success: true,
                         message: "Registierung erfolgreich",
-                        user: {
-                            id: newUser._id,
-                            username: newUser.username,
-                            email: newUser.email,
-                            avatar: newUser.avatar,
-                        }
+                        user: rest
                     })
         }
     } catch (error) {

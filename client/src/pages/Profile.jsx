@@ -63,7 +63,7 @@ const Profile = () => {
 
     const handleUpdate = async (e) => {
         e.preventDefault();
-        const url = `${BASE_URL}/user/update/${currentUser.id}`;
+        const url = `${BASE_URL}/user/update/${currentUser._id}`;
         console.log(url);
         const response = await fetch(url, {
             method: "PUT",
