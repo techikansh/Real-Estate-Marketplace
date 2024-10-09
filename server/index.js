@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 
 import authRouter from "./routes/auth.route.js";
 import userRouter from "./routes/user.route.js";
+import listingRouter from "./routes/listing.route.js";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use(cors({
 // Routes
 app.use("/api/auth", authRouter); // Auth route
 app.use("/api/user", userRouter); // User route
+app.use("/api/listing", listingRouter); // Listing route
 
 
 // middleware
