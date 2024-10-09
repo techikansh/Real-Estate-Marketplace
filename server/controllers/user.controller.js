@@ -36,3 +36,24 @@ export const updateUser = async (req, res, next) => {
         next(error);
     }
 };
+
+export const deleteUser = async (req, res, next) => {
+    const { id } = req.user;
+    const _id = req.params.id;
+
+    if (id != _id) {
+        return next(errorHandler(403, "Sie können nur Ihre eigene Daten löschen"));
+    }
+
+    try {
+        const deletedUser = await User.findByIdAndDelete(id);
+        if (!deletedUser) return next(errorHandler(404, "User not found"));
+
+        res.status(200).json({
+            success: true,
+            message: "User deleted successfully",
+        });
+    } catch (error) {
+        next(error);
+    }
+};

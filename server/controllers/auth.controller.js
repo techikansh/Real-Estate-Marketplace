@@ -99,3 +99,14 @@ export async function google(req, res, next) {
         next();
     }
 }
+
+export async function signout (req, res, next) {
+    try {
+        res.clearCookie("access_token", {httpOnly: true}).status(200).json({
+            success: true,
+            message: "Logout erfolgreich",
+        });
+    } catch (error) {
+        next(error);
+    }
+}

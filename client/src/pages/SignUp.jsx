@@ -2,11 +2,16 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import OAuth from "../components/OAuth";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
+
+
 const SignUp = () => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
@@ -59,14 +64,25 @@ const SignUp = () => {
                         />
                     </div>
 
-                    <div className="text-xl p-3 border rounded-xl w-[70%]">
+                    <div className="text-xl p-3 border rounded-xl w-[70%] flex items-center justify-between">
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="Password"
                             className="w-full outline-none text-xl "
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
+                        {showPassword ? (
+                            <FaEyeSlash
+                                className="cursor-pointer"
+                                onClick={() => setShowPassword(false)}
+                            />
+                        ) : (
+                            <FaEye
+                                className="cursor-pointer"
+                                onClick={() => setShowPassword(true)}
+                            />
+                        )}
                     </div>
 
                     {error && (

@@ -17,7 +17,7 @@ const Header = () => {
     return (
         <header className="drop-shadow-lg bg-black py-3">
             <div className="flex flex-wrap text-center items-center p-3 space-x-4 justify-between mx-4">
-                <div className="text-2xl sm:text-3xl font-bold text-white">
+                <div className="text-2xl sm:text-3xl font-bold text-white hover:cursor-pointer" onClick={() => navigate("/")}>
                     Estate Markt
                 </div>
 

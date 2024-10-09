@@ -9,8 +9,20 @@ import {
 import { app } from "../utils/firebase";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
-import { signInSuccess } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import {
+    updateUserStart,
+    updateUserSuccess,
+    updateUserFailure,
+    deleteUserStart,
+    deleteUserSuccess,
+    deleteUserFailure,
+    signOutStart,
+    signOutSuccess,
+    signOutFailure,
+} from "../redux/user/userSlice";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 // Firebase rules:
 // ---
 // allow write: if
@@ -29,8 +41,11 @@ const Profile = () => {
     const [username, setUsername] = useState(currentUser.username);
     const [email, setEmail] = useState(currentUser.email);
     const [password, setPassword] = useState("");
-    const [avatar, setAvatar] = useState(null);
-    const [userUpdateError, setUserUpdateError] = useState(null);
+    const [avatar, setAvatar] = useState(currentUser.avatar);
+    const error = useSelector((state) => state.user.error);
+    const loading = useSelector((state) => state.user.loading);
+    const [showPassword, setShowPassword] = useState(false);
+
     const handleImageUpload = (image) => {
         const storage = getStorage(app);
         const fileName = new Date().getTime() + image.name;
@@ -63,6 +78,9 @@ const Profile = () => {
 
     const handleUpdate = async (e) => {
         e.preventDefault();
+
+        dispatch(updateUserStart());
+
         const url = `${BASE_URL}/user/update/${currentUser._id}`;
         console.log(url);
         const response = await fetch(url, {
@@ -82,12 +100,47 @@ const Profile = () => {
         console.log(data);
 
         if (data.success) {
-            dispatch(signInSuccess(data.user));
+            dispatch(updateUserSuccess(data.user));
+            console.log(loading);
         } else {
-            setUserUpdateError(data.message);
+            dispatch(updateUserFailure(data.message));
+            console.log(loading);
         }
-
         setPassword("");
+    };
+
+    const handleDelete = async () => {
+        dispatch(deleteUserStart());
+        const url = `${BASE_URL}/user/delete/${currentUser._id}`;
+        const response = await fetch(url, {
+            method: "DELETE",
+            credentials: "include",
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            handleSignOut();
+        } else {
+            dispatch(deleteUserFailure(data.message));
+        }
+    };
+
+    const handleSignOut = async () => {
+        dispatch(signOutStart());
+        const url = `${BASE_URL}/auth/signout`;
+        const response = await fetch(url, {
+            method: "GET",
+            credentials: "include",
+        });
+        const data = await response.json();
+
+        console.log(data);
+        if (data.success) {
+            dispatch(signOutSuccess());
+            navigate("/signin");
+        } else {
+            dispatch(signOutFailure(data.message));
+        }
     };
 
     useEffect(() => {
@@ -120,9 +173,7 @@ const Profile = () => {
                     <p>Uploading: {imageUploadProgress}%</p>
                 )}
 
-                {imageUploadProgress == 101 && (
-                    <p>Upload complete</p>
-                )}
+                {imageUploadProgress == 101 && <p>Upload complete</p>}
 
                 {imageUploadError && <p>Error: {imageUploadError}</p>}
 
@@ -144,36 +195,48 @@ const Profile = () => {
                         setEmail(e.target.value);
                     }}
                 />
-                <input
-                    type="password"
-                    placeholder="New Password"
-                    className="w-72 md:w-96 p-2 mt-4 border border-gray-300 rounded-md outline-none"
-                    value={password}
-                    onChange={(e) => {
-                        setPassword(e.target.value);
-                    }}
-                />
-
+                <div className="w-72 md:w-96 p-2 mt-4 border border-gray-300 rounded-md flex items-center justify-between">
+                    <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="New Password"
+                        className="w-72 md:w-96 outline-none"
+                        value={password}
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                        }}
+                    />
+                    {showPassword ? (
+                        <FaEyeSlash
+                            className="cursor-pointer"
+                            onClick={() => setShowPassword(false)}
+                        />
+                    ) : (
+                        <FaEye
+                            className="cursor-pointer"
+                            onClick={() => setShowPassword(true)}
+                        />
+                    )}
+                </div>
                 <button
                     className="w-72 md:w-96 p-2 mt-12 border border-gray-300 rounded-md text-white bg-black"
                     onClick={handleUpdate}
+                    disabled={loading}
                 >
-                    Update
+                    {loading ? "Loading..." : "Update"}
                 </button>
 
-                {userUpdateError && (
-                    <p className="text-red-500">Error: {userUpdateError}</p>
-                )}
+                {error && <p className="text-red-500">Error: {error}</p>}
 
                 <div className="flex items-center justify-between gap-10 w-72 md:w-96">
-                    <span className="text-center hover:bg-black hover:text-white hover:cursor-pointer p-2 rounded-md">
-                        Delete Account
+                    <span
+                        className="text-center hover:bg-black hover:text-white hover:cursor-pointer p-2 rounded-md"
+                        onClick={handleDelete}
+                    >
+                        {loading ? "Deleting..." : "Delete Account"}
                     </span>
                     <span
                         className="text-center hover:bg-black hover:text-white hover:cursor-pointer p-2 rounded-md"
-                        onClick={() => {
-                            navigate("/signin");
-                        }}
+                        onClick={handleSignOut}
                     >
                         Sign Out
                     </span>
