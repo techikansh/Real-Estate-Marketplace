@@ -225,6 +225,13 @@ const Profile = () => {
                     {loading ? "Loading..." : "Update"}
                 </button>
 
+                <button
+                    className="w-72 md:w-96 p-2 mt-12 border border-gray-300 rounded-md text-white bg-black"
+                    onClick={() => {navigate("/create-listing")}}
+                >
+                    Create Listing
+                </button>
+
                 {error && <p className="text-red-500">Error: {error}</p>}
 
                 <div className="flex items-center justify-between gap-10 w-72 md:w-96">
