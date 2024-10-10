@@ -44,7 +44,7 @@ const SignIn = () => {
         // setLoading(false);
         // setError("");
         dispatch(signInSuccess(data.user));
-        navigate("/home");
+        navigate("/");
     };
 
     return (
