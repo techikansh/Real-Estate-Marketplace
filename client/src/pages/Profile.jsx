@@ -165,6 +165,20 @@ const Profile = () => {
         }
     };
 
+    const handleDeleteListing = async (id) => {
+        const url = `${BASE_URL}/listing/delete/${id}`;
+        const response = await fetch(url, {
+            method: "DELETE",
+            credentials: "include",
+        });
+        const data = await response.json();
+        if (data.success) {
+            setUserListings(userListings.filter((listing) => listing._id !== id));
+        } else {
+            console.log(data.message);
+        }
+    }
+
     const handleHideListings = () => {
         setShowingListings(false);
     };
@@ -175,9 +189,7 @@ const Profile = () => {
         }
     }, [image]);
 
-    useEffect(() => {
-        console.log(showingListings);
-    }, [showingListings]);
+    
 
     return (
         <div className="flex flex-col items-center justify-center mt-10 mx-auto">
@@ -317,10 +329,15 @@ const Profile = () => {
                                             {listing.name}
                                         </h1>
                                         <div className="flex flex-col items-center justify-center gap-2">
-                                            <button className="bg-black text-white py-1 px-2 rounded-md w-28">
+                                            <button 
+                                                className="bg-black text-white py-1 px-2 rounded-md w-28"
+                                                onClick={() => handleDeleteListing(listing._id)}
+                                            >
                                                 Löschen
                                             </button>
-                                            <button className="bg-black text-white py-1 px-2 rounded-md w-28">
+                                            <button className="bg-black text-white py-1 px-2 rounded-md w-28"
+                                                onClick={() => navigate(`/update-listing/${listing._id}`)}
+                                            >
                                                 Bearbeiten
                                             </button>
                                         </div>

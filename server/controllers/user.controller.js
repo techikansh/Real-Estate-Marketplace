@@ -78,3 +78,19 @@ export async function getUserListings(req, res, next) {
         next(error);
     }
 }
+
+export async function deleteUserListing(req, res, next) {
+    const {id} = req.user;
+    const _id = req.params.id;
+
+    if (id != _id) {
+        return next(
+            errorHandler(403, "Sie können nur Ihre eigene Daten löschen")
+        )
+    }
+    try {
+        const deleteListing = await Listing.findByIdAndDelete(_id);
+    } catch (error) {
+        
+    }
+}

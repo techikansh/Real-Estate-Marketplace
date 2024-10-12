@@ -4,28 +4,20 @@ import {
     uploadBytesResumable,
     getDownloadURL,
 } from "firebase/storage";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { app } from "../utils/firebase";
 import { useSelector } from "react-redux";
 import { BASE_URL } from "../utils/constants";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-
-const CreateListing = () => {
-
+const UpdateListing = () => {
     const navigate = useNavigate();
+    const {listingId} = useParams();
     const [filesToUpload, setFilesToUpload] = useState(null);
     const [imageUploadError, setImageUploadError] = useState(null);
     const [uploading, setUploading] = useState(false);
-    const [creating, setCreating] = useState(false);
-    const [creatingError, setCreatingError] = useState("");
-    // const [images, setImages] = useState([
-    //     "https://saterdesign.com/cdn/shop/products/6566-Maynard-Main-Image_1600x.jpg?v=1586042939",
-    //     "https://cdn.houseplansservices.com/content/jrilhlveke52uslov04n9j9sgq/w991x660.jpg?v=10",
-    //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRj2yR_kvQKYLsIjG4JcQ2W6RA_-EuUfL_wF39MiVrfdtRXlNVjYoO4-MJvJawEKyZr4U&usqp=CAU",
-    //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT50OHOTmmNtPVf96cKojCtNBW7B7sIqB34K8Vrt_e6mVYJl0KUf_F6yUtBROAQaCNTxbA&usqp=CAU",
-    //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0pYsEOF_1vIZM8KO07rIOa0z5ybofQEthgYqEEkAI_ubpd9cciWOVhheVNuNldASYwh8&usqp=CAU",
-    // ]);
+    const [updating, setUpdating] = useState(false);
+    const [updatingError, setUpdatingError] = useState("");
 
     const [formData, setFormData] = useState({
         name: "",
@@ -98,30 +90,48 @@ const CreateListing = () => {
             });
     };
 
-    const handleCreate = async () => {
-        setCreating(true);
-        setCreatingError("");
-        const url = `${BASE_URL}/listing/create`;
+    const handleUpdate = async () => {
+        setUpdating(true);
+        setUpdatingError("");
+
+        const url = `${BASE_URL}/listing/update/${listingId}`;
         const res = await fetch(url, {
-            method: "POST",
+            method: "PUT",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData),
         });
         const data = await res.json();
         if (data.success) {
-            setCreating(false);
+            setUpdating(false);
             navigate("/profile");
         } else {
-            setCreating(false);
-            setCreatingError(data.message);
+            setUpdating(false);
+            setUpdatingError(data.message);
         }
     };
+
+    const getListing = async () => {
+        const url = `${BASE_URL}/listing/get/${listingId}`;
+        const res = await fetch(url, {
+            method: "GET",
+        });
+        const data = await res.json();
+        if (data.success) {
+            setFormData(data.listing);
+        } else {
+            console.log(data.message);
+        }
+    }
+
+    useEffect(() => {
+        getListing();
+    }, []);
 
     return (
         <div className="flex flex-col justify-center items-center mx-10">
             <h1 className="text-3xl font-bold text-center my-10">
-                Create Listing
+                Update Listing
             </h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
@@ -188,16 +198,16 @@ const CreateListing = () => {
                         <p className="text-red-500">{imageUploadError}</p>
                     )}
 
-                    {creatingError && (
-                        <p className="text-red-500">{creatingError}</p>
+                    {updatingError && (
+                        <p className="text-red-500">{updatingError}</p>
                     )}
 
                     <button
                         className="w-full bg-black text-white px-4 py-2 rounded-md mt-4"
-                        onClick={handleCreate}
-                        disabled={creating}
+                        onClick={handleUpdate}
+                        disabled={updating}
                     >
-                        {creating ? "Wird erstellt..." : "Erstellen"}
+                        {updating ? "Wird aktualisiert..." : "Aktualisieren"}
                     </button>
                 </div>
 
@@ -394,6 +404,6 @@ const CreateListing = () => {
             </div>
         </div>
     );
-};
+}
 
-export default CreateListing;
+export default UpdateListing
