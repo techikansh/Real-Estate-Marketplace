@@ -1,4 +1,5 @@
 import User from "../models/user.model.js";
+import Listing from "../models/listing.model.js";
 import { errorHandler } from "../utils/errorHandler.js";
 
 export const updateUser = async (req, res, next) => {
@@ -42,7 +43,9 @@ export const deleteUser = async (req, res, next) => {
     const _id = req.params.id;
 
     if (id != _id) {
-        return next(errorHandler(403, "Sie können nur Ihre eigene Daten löschen"));
+        return next(
+            errorHandler(403, "Sie können nur Ihre eigene Daten löschen")
+        );
     }
 
     try {
@@ -57,3 +60,21 @@ export const deleteUser = async (req, res, next) => {
         next(error);
     }
 };
+
+export async function getUserListings(req, res, next) {
+    const _id = req.params.id;
+    const { id } = req.user;
+
+    if (_id != id) {
+        return next(
+            errorHandler(403, "Sie können nur Ihre eigene Daten ansehen")
+        );
+    }
+
+    try {
+        const listings = await Listing.find({ userRef: _id });
+        return res.status(200).json({ success: true, listings });
+    } catch (error) {
+        next(error);
+    }
+}

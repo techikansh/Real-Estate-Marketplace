@@ -45,6 +45,9 @@ const Profile = () => {
     const error = useSelector((state) => state.user.error);
     const loading = useSelector((state) => state.user.loading);
     const [showPassword, setShowPassword] = useState(false);
+    const [userListings, setUserListings] = useState([]);
+    const [userListingsError, setUserListingsError] = useState(null);
+    const [showingListings, setShowingListings] = useState(false);
 
     const handleImageUpload = (image) => {
         const storage = getStorage(app);
@@ -143,11 +146,38 @@ const Profile = () => {
         }
     };
 
+    const handleShowListings = async () => {
+        setUserListingsError(null);
+        const url = `${BASE_URL}/user/listings/${currentUser._id}`;
+        const response = await fetch(url, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const data = await response.json();
+        if (data.success) {
+            setUserListings(data.listings);
+            setShowingListings(true);
+        } else {
+            setUserListingsError(data.message);
+        }
+    };
+
+    const handleHideListings = () => {
+        setShowingListings(false);
+    };
+
     useEffect(() => {
         if (image) {
             handleImageUpload(image);
         }
     }, [image]);
+
+    useEffect(() => {
+        console.log(showingListings);
+    }, [showingListings]);
 
     return (
         <div className="flex flex-col items-center justify-center mt-10 mx-auto">
@@ -227,7 +257,9 @@ const Profile = () => {
 
                 <button
                     className="w-72 md:w-96 p-2 mt-12 border border-gray-300 rounded-md text-white bg-black"
-                    onClick={() => {navigate("/create-listing")}}
+                    onClick={() => {
+                        navigate("/create-listing");
+                    }}
                 >
                     Create Listing
                 </button>
@@ -248,6 +280,59 @@ const Profile = () => {
                         Sign Out
                     </span>
                 </div>
+                <button
+                    className="text-sm text-green-600"
+                    onClick={handleShowListings}
+                    hidden={showingListings}
+                >
+                    Show Listings
+                </button>
+                <button
+                    className="text-sm text-green-600"
+                    onClick={handleHideListings}
+                    hidden={!showingListings}
+                >
+                    Hide Listings
+                </button>
+                {userListingsError && (
+                    <p className="text-red-500">Error: {userListingsError}</p>
+                )}
+
+                {userListings.length > 0&& showingListings && (
+                    <div className="flex flex-col items-center justify-center gap-2">
+                        {userListings.map((listing) => {
+                            return (
+                                <div
+                                    key={listing._id}
+                                    className="flex border rounded-md w-[32rem] p-2 gap-2 justify-start items-center"
+                                >
+                                    <img
+                                        src={listing.imageUrls[0]}
+                                        alt="Listing"
+                                        className="w-24 h-16 object-cover rounded-md"
+                                    />
+
+                                    <div className="flex items-center justify-between w-full ml-2">
+                                        <h1 className="text-center font-semibold">
+                                            {listing.name}
+                                        </h1>
+                                        <div className="flex flex-col items-center justify-center gap-2">
+                                            <button className="bg-black text-white py-1 px-2 rounded-md w-28">
+                                                Löschen
+                                            </button>
+                                            <button className="bg-black text-white py-1 px-2 rounded-md w-28">
+                                                Bearbeiten
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+                <br />
+                <br />
+                <br />
             </div>
         </div>
     );
