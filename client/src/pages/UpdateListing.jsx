@@ -104,7 +104,7 @@ const UpdateListing = () => {
         const data = await res.json();
         if (data.success) {
             setUpdating(false);
-            navigate("/profile");
+            navigate(`/listing/${listingId}`);
         } else {
             setUpdating(false);
             setUpdatingError(data.message);

@@ -19,13 +19,7 @@ const CreateListing = () => {
     const [uploading, setUploading] = useState(false);
     const [creating, setCreating] = useState(false);
     const [creatingError, setCreatingError] = useState("");
-    // const [images, setImages] = useState([
-    //     "https://saterdesign.com/cdn/shop/products/6566-Maynard-Main-Image_1600x.jpg?v=1586042939",
-    //     "https://cdn.houseplansservices.com/content/jrilhlveke52uslov04n9j9sgq/w991x660.jpg?v=10",
-    //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRj2yR_kvQKYLsIjG4JcQ2W6RA_-EuUfL_wF39MiVrfdtRXlNVjYoO4-MJvJawEKyZr4U&usqp=CAU",
-    //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT50OHOTmmNtPVf96cKojCtNBW7B7sIqB34K8Vrt_e6mVYJl0KUf_F6yUtBROAQaCNTxbA&usqp=CAU",
-    //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0pYsEOF_1vIZM8KO07rIOa0z5ybofQEthgYqEEkAI_ubpd9cciWOVhheVNuNldASYwh8&usqp=CAU",
-    // ]);
+
 
     const [formData, setFormData] = useState({
         name: "",
