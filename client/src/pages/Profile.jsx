@@ -9,7 +9,7 @@ import {
 import { app } from "../utils/firebase";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
     updateUserStart,
     updateUserSuccess,
@@ -173,11 +173,13 @@ const Profile = () => {
         });
         const data = await response.json();
         if (data.success) {
-            setUserListings(userListings.filter((listing) => listing._id !== id));
+            setUserListings(
+                userListings.filter((listing) => listing._id !== id)
+            );
         } else {
             console.log(data.message);
         }
-    }
+    };
 
     const handleHideListings = () => {
         setShowingListings(false);
@@ -188,8 +190,6 @@ const Profile = () => {
             handleImageUpload(image);
         }
     }, [image]);
-
-    
 
     return (
         <div className="flex flex-col items-center justify-center mt-10 mx-auto">
@@ -310,7 +310,7 @@ const Profile = () => {
                     <p className="text-red-500">Error: {userListingsError}</p>
                 )}
 
-                {userListings.length > 0&& showingListings && (
+                {userListings.length > 0 && showingListings && (
                     <div className="flex flex-col items-center justify-center gap-2">
                         {userListings.map((listing) => {
                             return (
@@ -318,25 +318,36 @@ const Profile = () => {
                                     key={listing._id}
                                     className="flex border rounded-md w-[32rem] p-2 gap-2 justify-start items-center"
                                 >
-                                    <img
-                                        src={listing.imageUrls[0]}
-                                        alt="Listing"
-                                        className="w-24 h-16 object-cover rounded-md"
-                                    />
+                                    <Link to={`/listing/${listing._id}`}>
+                                        <img
+                                            src={listing.imageUrls[0]}
+                                            alt="Listing"
+                                            className="w-24 h-16 object-cover rounded-md"
+                                        />
+                                    </Link>
 
                                     <div className="flex items-center justify-between w-full ml-2">
                                         <h1 className="text-center font-semibold">
                                             {listing.name}
                                         </h1>
                                         <div className="flex flex-col items-center justify-center gap-2">
-                                            <button 
+                                            <button
                                                 className="bg-black text-white py-1 px-2 rounded-md w-28"
-                                                onClick={() => handleDeleteListing(listing._id)}
+                                                onClick={() =>
+                                                    handleDeleteListing(
+                                                        listing._id
+                                                    )
+                                                }
                                             >
                                                 Löschen
                                             </button>
-                                            <button className="bg-black text-white py-1 px-2 rounded-md w-28"
-                                                onClick={() => navigate(`/update-listing/${listing._id}`)}
+                                            <button
+                                                className="bg-black text-white py-1 px-2 rounded-md w-28"
+                                                onClick={() =>
+                                                    navigate(
+                                                        `/update-listing/${listing._id}`
+                                                    )
+                                                }
                                             >
                                                 Bearbeiten
                                             </button>

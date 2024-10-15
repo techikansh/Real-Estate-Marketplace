@@ -10,7 +10,7 @@ const Header = () => {
     const currentUser = useSelector((state) => state.user.currentUser);
 
     function handleSearch() {
-        console.log(search);
+        // console.log(search);
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.set("searchTerm", search);
         const searchQuery = urlParams.toString();
@@ -44,7 +44,7 @@ const Header = () => {
                         className="outline-none w-32 md:w-64 lg:w-96 text-lg"
                         type="text"
                         placeholder="Search"
-                        value={search}
+                        value={search || ""}
                         onChange={(e) => {
                             setSearch(e.target.value);
                         }}
