@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
+import ListingItem from "../components/ListingItem";
 
 const Search = () => {
     const navigate = useNavigate();
@@ -16,6 +17,8 @@ const Search = () => {
     const [listings, setListings] = useState([]);
     const [listingsError, setListingsError] = useState(null);
     const [listingsLoading, setListingsLoading] = useState(false);
+
+    console.log(listings.length);
 
     const handleSortAndOrderChange = (e) => {
         const sort = e.target.value.split("_")[0];
@@ -56,7 +59,6 @@ const Search = () => {
         });
         const data = await response.json();
         if (data.success) {
-            console.log(data.listings);
             setListings(data.listings);
             setListingsLoading(false);
         } else {
@@ -255,10 +257,16 @@ const Search = () => {
                 </form>
             </div>
             {/* -------------------*/}
-            <div>
-                <h1 className="text-3xl font-semibold p-5 border-b">
+            <div className="md:w-[70%]">
+                <h1 className="text-3xl font-semibold p-5 border-b w-full">
                     Listings
                 </h1>
+
+                {listings.length === 0 && (
+                    <p className="flex items-center justify-center">
+                        Keine Anzeige gefunden
+                    </p>
+                )}
 
                 {listingsError && (
                     <p className="text-red-500 flex items-center">
@@ -269,6 +277,18 @@ const Search = () => {
                 {listingsLoading && (
                     <p className="flex items-center">Loading...</p>
                 )}
+
+                {!listingsLoading &&
+                    !listingsError &&
+                    listings.length > 0 &&
+                    <div className="flex flex-wrap gap-10 items-center pt-16 px-10 md:justify-start justify-center">
+                        {listings.map((listing, index) => {
+                            return (
+                                    <ListingItem listing={listing} key={index} />
+                                );
+                            })}
+                    </div>
+                }
             </div>
         </div>
     );
