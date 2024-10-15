@@ -17,8 +17,9 @@ const Search = () => {
     const [listings, setListings] = useState([]);
     const [listingsError, setListingsError] = useState(null);
     const [listingsLoading, setListingsLoading] = useState(false);
+    const [showShowMoreButton, setShowShowMoreButton] = useState(true);
 
-    console.log(listings.length);
+    console.log(listings);
 
     const handleSortAndOrderChange = (e) => {
         const sort = e.target.value.split("_")[0];
@@ -47,6 +48,7 @@ const Search = () => {
     const fetchListings = async (urlParams) => {
         setListingsError(null);
         setListingsLoading(true);
+        setShowShowMoreButton(true);
         const searchQuery = urlParams.toString();
         // console.log(searchQuery);
         const url = `${BASE_URL}/listing/search?${searchQuery}`;
@@ -61,9 +63,38 @@ const Search = () => {
         if (data.success) {
             setListings(data.listings);
             setListingsLoading(false);
+            if (data.listings.length < 9) {
+                setShowShowMoreButton(false);
+            }
         } else {
             setListingsError(data.message);
             setListingsLoading(false);
+        }
+    };
+
+    const handleShowMore = async () => {
+        setListingsError("");
+        const numberOfListings = listings.length;
+        const startIndex = numberOfListings;
+        const urlParams = new URLSearchParams(location.search);
+        urlParams.set("startIndex", startIndex);
+        const searchQuery = urlParams.toString();
+
+        const url = `${BASE_URL}/listing/search?${searchQuery}`;
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const data = await response.json();
+        if (data.success) {
+            setListings([...listings, ...data.listings]);
+            if (data.listings.length < 9) {
+                setShowShowMoreButton(false);
+            }
+        } else {
+            setListingsError(data.message);
         }
     };
 
@@ -103,7 +134,7 @@ const Search = () => {
 
     return (
         <div className="flex flex-col md:flex-row bg-slate-100">
-            <div className="p-7 border-b md:border-r-2 md:h-screen md:w-[30%]">
+            <div className="p-7 border-b md:border-r-2 md:min-h-screen md:w-[50%] lg:w-[30%] flex flex-col gap-4">
                 <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
                     <div className="flex items-center gap-3 ">
                         <label className="whitespace-nowrap font-semibold text-xl">
@@ -236,11 +267,12 @@ const Search = () => {
                             id="sort_order"
                             className="outline-none p-2 rounded-md border bg-white w-[70%]"
                             onChange={(e) => handleSortAndOrderChange(e)}
+                            value={sideBarData.sort + "_" + sideBarData.order}
                         >
-                            <option value="regularPreis_asc">
+                            <option value="regularPrice_asc">
                                 Preis aufsteigend
                             </option>
-                            <option value="regularPreis_desc">
+                            <option value="regularPrice_desc">
                                 Preis absteigend
                             </option>
                             <option value="createdAt_desc">Neueste</option>
@@ -278,17 +310,24 @@ const Search = () => {
                     <p className="flex items-center">Loading...</p>
                 )}
 
-                {!listingsLoading &&
-                    !listingsError &&
-                    listings.length > 0 &&
-                    <div className="flex flex-wrap gap-10 items-center pt-16 px-10 md:justify-start justify-center">
+                {!listingsLoading && !listingsError && listings.length > 0 && (
+                    <div className="flex flex-wrap gap-10 items-center pt-16 px-10 justify-center md:justify-center lg:justify-start  mb-2">
                         {listings.map((listing, index) => {
                             return (
-                                    <ListingItem listing={listing} key={index} />
-                                );
-                            })}
+                                <ListingItem listing={listing} key={index} />
+                            );
+                        })}
                     </div>
-                }
+                )}
+
+                {showShowMoreButton && (
+                    <button
+                        className="text-green-500 hover:underline w-full items-center m-2"
+                        onClick={handleShowMore}
+                    >
+                        Show More
+                    </button>
+                )}
             </div>
         </div>
     );

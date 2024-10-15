@@ -77,41 +77,42 @@ export async function getListingById(req, res, next) {
 
 export async function searchListings(req, res, next) {
     const searchTerm = req.query.searchTerm;
-    console.log("Search Term:", searchTerm);
+    // console.log("Search Term:", searchTerm);
 
     let type = req.query.type;
-    console.log(type);
+    // console.log(type);
     if (type == undefined || type == "all") {
         type = { $in: ["rent", "sale"] };
     }
     let offer = req.query.offer;
-    console.log(offer);
+    // console.log(offer);
     if (offer == undefined || offer == "false") {
         offer = { $in: [true, false] };
     }
     let parking = req.query.parking;
-    console.log(parking);
+    // console.log(parking);
     if (parking == undefined || parking == "false") {
         parking = { $in: [true, false] };
     }
     let furnished = req.query.furniture;
-    console.log(furnished);
+    // console.log(furnished);
     if (furnished == undefined || furnished == "false") {
         furnished = { $in: [true, false] };
     }
     const sort = req.query.sort || "createdAt";
     const order = req.query.order || "desc";
     const limit = req.query.limit || 9;
-    console.log("--------------");
+    const startIndex = req.query.startIndex || 0;
+    // console.log("--------------");
 
-    console.log("Search Term:", searchTerm);
-    console.log("Type:", type);
-    console.log("Offer:", offer);
-    console.log("Parking:", parking);
-    console.log("Furnished:", furnished);
-    console.log("Sort:", sort);
-    console.log("Order:", order);
-    console.log("Limit:", limit);
+    // console.log("Search Term:", searchTerm);
+    // console.log("Type:", type);
+    // console.log("Offer:", offer);
+    // console.log("Parking:", parking);
+    // console.log("Furnished:", furnished);
+    // console.log("Sort:", sort);
+    // console.log("Order:", order);
+    // console.log("Limit:", limit);
 
     try {
         const listings = await Listing.find({
@@ -122,7 +123,10 @@ export async function searchListings(req, res, next) {
             furnished,
         })
             .sort({ [sort]: order })
-            .limit(limit);
+            .limit(limit)
+            .skip(startIndex);
+
+        // console.log(listings);
 
         res.status(200).json({ success: true, listings });
     } catch (error) {
