@@ -119,7 +119,7 @@ const Search = () => {
             order
         ) {
             setSideBarData({
-                searchTerm: searchTerm,
+                searchTerm: searchTerm || "",
                 type: type || "all",
                 offer: offer == "true" ? true : false,
                 parking: parking == "true" ? true : false,

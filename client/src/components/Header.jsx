@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { IoMdSearch } from "react-icons/io";
 import { GiCrossedSabres } from "react-icons/gi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Header = () => {
@@ -65,12 +65,12 @@ const Header = () => {
                 </form>
 
                 <div className="flex flex-wrap items-center justify-evenly text-white space-x-4 text-xl font-semibold">
-                    <div className="hidden lg:inline hover:text-gray-400 hover:cursor-pointer">
+                    <Link className="hidden lg:inline hover:text-gray-400 hover:cursor-pointer" to="/">
                         Home
-                    </div>
-                    <div className="hidden lg:inline hover:text-gray-400 hover:cursor-pointer">
+                    </Link>
+                    <Link className="hidden lg:inline hover:text-gray-400 hover:cursor-pointer" to="/about">
                         Über Uns
-                    </div>
+                    </Link>
                     {currentUser ? (
                         <img
                             src={currentUser.avatar}

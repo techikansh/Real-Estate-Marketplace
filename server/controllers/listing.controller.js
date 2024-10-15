@@ -76,7 +76,7 @@ export async function getListingById(req, res, next) {
 }
 
 export async function searchListings(req, res, next) {
-    const searchTerm = req.query.searchTerm;
+    const searchTerm = req.query.searchTerm || "";
     // console.log("Search Term:", searchTerm);
 
     let type = req.query.type;
