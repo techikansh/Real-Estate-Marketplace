@@ -73,22 +73,22 @@ const Home = () => {
             {/* Hero */}
             <div className="flex flex-col gap-10 pt-28 px-3 max-w-6xl mx-auto">
                 <h1 className="text-3xl lg:text-6xl font-bold text-slate-700">
-                    Find you next{" "}
-                    <span className="text-slate-500">perfect</span> <br /> place
-                    with ease
+                    Finde deinen nächsten{" "}
+                    <span className="text-slate-500">perfekten</span> <br /> Ort
+                    mit Leichtigkeit
                 </h1>
 
                 <div className="text-gray-400 text-xs sm:text-sm">
-                    Estate Markt is the best place to find your perfect place to
-                    live <br />
-                    We have wide range of properties for you to choose from
+                    Estate Markt ist der beste Ort, um deinen perfekten Ort zu
+                    finden <br />
+                    Wir haben eine große Auswahl an Immobilien für dich zur Auswahl
                 </div>
 
                 <Link
                     to="/search"
                     className="text-xs sm:text-sm font-bold hover:underline text-blue-800"
                 >
-                    Let's get started
+                    Lass uns anfangen
                 </Link>
             </div>
 
@@ -116,14 +116,14 @@ const Home = () => {
             {/* Listings */}
             <div className="flex flex-col max-w-6xl mx-auto px-3 ">
                 <h1 className="text-2xl font-semibold text-slate-500">
-                    Recent Offers
+                    Aktuelle Angebote
                 </h1>
 
                 <Link
                     to={"/search?offer=true"}
                     className="text-xs sm:text-sm font-bold hover:underline text-blue-800 mt-2"
                 >
-                    See all Offers
+                    Alle Angebote anzeigen
                 </Link>
                 <div className="flex flex-wrap w-full gap-6 justify-center md:justify-start lg:justify-start mt-2">
                     {offerListings &&
@@ -138,14 +138,14 @@ const Home = () => {
                 {/* ------------ */} 
 
                 <h1 className="text-2xl font-semibold text-slate-500 mt-10">
-                    Recent Places for Rent
+                    Aktuelle Mietanzeigen
                 </h1>
 
                 <Link
                     to={"/search?type=rent"}
                     className="text-xs sm:text-sm font-bold hover:underline text-blue-800 mt-2"
                 >
-                    See more places to rent
+                    Weitere Mietanzeigen anzeigen
                 </Link>
                 <div className="flex flex-wrap w-full gap-6 justify-center md:justify-start lg:justify-start mt-2">
                     {rentListings &&
@@ -160,14 +160,14 @@ const Home = () => {
                 {/* ------------ */} 
 
                 <h1 className="text-2xl font-semibold text-slate-500 mt-10">
-                    Recent Places for Sale
+                    Aktuelle Verkaufsanzeigen
                 </h1>
 
                 <Link
                     to={"/search?type=sale"}
                     className="text-xs sm:text-sm font-bold hover:underline text-blue-800 mt-2"
                 >
-                    See more places for sale
+                    Weitere Verkaufsanzeigen anzeigen
                 </Link>
                 <div className="flex flex-wrap w-full gap-6 justify-center md:justify-start lg:justify-start mt-2">
                     {saleListings &&
