@@ -3,6 +3,9 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 
 import authRouter from "./routes/auth.route.js";
 import userRouter from "./routes/user.route.js";
@@ -20,11 +23,18 @@ app.use(cors({
   credentials: true,
 }));
 
+// Helper to get __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Routes
 app.use("/api/auth", authRouter); // Auth route
 app.use("/api/user", userRouter); // User route
 app.use("/api/listing", listingRouter); // Listing route
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
+});
 
 
 // middleware
