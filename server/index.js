@@ -35,7 +35,7 @@ app.use("/api/user", userRouter); // User route
 app.use("/api/listing", listingRouter); // Listing route
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
+  res.sendFile(path.join(__dirname, 'client/dist/index.html'));
 });
 
 
