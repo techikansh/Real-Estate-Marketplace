@@ -46,7 +46,11 @@ export async function signin(req, res, next) {
         });
         const { password: userPassword, ...rest } = user._doc;
         return res
-            .cookie("access_token", token, { httpOnly: true, sameSite: "None" })
+            .cookie("access_token", token, {
+                httpOnly: true,
+                sameSite: "None",
+                secure: process.env.NODE_ENV === "production",
+            })
             .status(200)
             .json({
                 success: true,
@@ -72,6 +76,7 @@ export async function google(req, res, next) {
                 .cookie("access_token", token, {
                     httpOnly: true,
                     sameSite: "None",
+                    secure: process.env.NODE_ENV === "production",
                 })
                 .status(200)
                 .json({
@@ -98,7 +103,11 @@ export async function google(req, res, next) {
             );
             const { password, ...rest } = newUser._doc;
             return res
-                .cookie("access_token", token, { httpOnly: true, sameSite: "None" })
+                .cookie("access_token", token, {
+                    httpOnly: true,
+                    sameSite: "None",
+                    secure: process.env.NODE_ENV === "production",
+                })
                 .status(200)
                 .json({
                     success: true,
