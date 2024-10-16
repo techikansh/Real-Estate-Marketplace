@@ -11,8 +11,10 @@ import listingRouter from "./routes/listing.route.js";
 dotenv.config();
 
 const app = express();
+app.set('trust proxy', 1);
 app.use(express.json());
 app.use(cookieParser());
+// Trust the first proxy
 app.use(cors({
   origin: ["http://localhost:5173", "https://real-estate-marketplace-client.onrender.com"],
   credentials: true,
