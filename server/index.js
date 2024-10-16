@@ -25,8 +25,9 @@ app.use(cors({
   origin: ["http://localhost:5173", "https://real-estate-marketplace-client.onrender.com"],
   credentials: true,
 }));
-// app.use(express.static(join(__dirname, 'client/dist')));
+
 const clientDistPath = join(__dirname, '..', 'client', 'dist');
+app.use(express.static(clientDistPath));
 
 
 
@@ -35,9 +36,6 @@ app.use("/api/auth", authRouter); // Auth route
 app.use("/api/user", userRouter); // User route
 app.use("/api/listing", listingRouter); // Listing route
 
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'client/dist/index.html'));
-// });
 
 app.get('*', (req, res) => {
   res.sendFile(join(clientDistPath, 'index.html'));
