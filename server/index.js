@@ -14,6 +14,9 @@ import listingRouter from "./routes/listing.route.js";
 dotenv.config();
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.set('trust proxy', 1);
 app.use(express.json());
 app.use(cookieParser());
@@ -22,10 +25,9 @@ app.use(cors({
   origin: ["http://localhost:5173", "https://real-estate-marketplace-client.onrender.com"],
   credentials: true,
 }));
+app.use(express.static(path.join(__dirname, 'client/dist')));
 
-// Helper to get __dirname equivalent in ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
 
 // Routes
 app.use("/api/auth", authRouter); // Auth route
