@@ -28,7 +28,6 @@ export async function signup(req, res, next) {
 export async function signin(req, res, next) {
     const { email, password } = req.body;
     try {
-
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({
@@ -47,12 +46,12 @@ export async function signin(req, res, next) {
         });
         const { password: userPassword, ...rest } = user._doc;
         return res
-            .cookie("access_token", token, { httpOnly: true })
+            .cookie("access_token", token, { httpOnly: true, sameSite: "None" })
             .status(200)
             .json({
                 success: true,
                 message: "Login erfolgreich",
-                user: rest
+                user: rest,
             });
     } catch (error) {
         next();
@@ -62,47 +61,59 @@ export async function signin(req, res, next) {
 export async function google(req, res, next) {
     try {
         const { name, email, image } = req.body;
-        const user = await User.findOne({email});
-        if (user) { // Signin
-            const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: "1h"});
+        const user = await User.findOne({ email });
+        if (user) {
+            // Signin
+            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+                expiresIn: "1h",
+            });
             const { password, ...rest } = user._doc;
             return res
-                    .cookie("access_token", token, { httpOnly: true })
-                    .status(200)
-                    .json({
-                        success: true,
-                        message: "Login erfolgreich",
-                        user: rest
-                    });
-        }
-        else{ // Signup
+                .cookie("access_token", token, {
+                    httpOnly: true,
+                    sameSite: "None",
+                })
+                .status(200)
+                .json({
+                    success: true,
+                    message: "Login erfolgreich",
+                    user: rest,
+                });
+        } else {
+            // Signup
             const randomPassword = Math.random().toString(36).slice(-8);
-            const updatedUsername = name.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-4);
+            const updatedUsername =
+                name.split(" ").join("").toLowerCase() +
+                Math.random().toString(36).slice(-4);
             const newUser = await User.create({
                 username: updatedUsername,
                 email: email,
                 password: randomPassword,
                 avatar: image,
             });
-            const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET, {expiresIn: "1h"});
+            const token = jwt.sign(
+                { id: newUser._id },
+                process.env.JWT_SECRET,
+                { expiresIn: "1h" }
+            );
             const { password, ...rest } = newUser._doc;
             return res
-                    .cookie("access_token", token, { httpOnly: true })
-                    .status(200)
-                    .json({
-                        success: true,
-                        message: "Registierung erfolgreich",
-                        user: rest
-                    })
+                .cookie("access_token", token, { httpOnly: true, sameSite: "None" })
+                .status(200)
+                .json({
+                    success: true,
+                    message: "Registierung erfolgreich",
+                    user: rest,
+                });
         }
     } catch (error) {
         next();
     }
 }
 
-export async function signout (req, res, next) {
+export async function signout(req, res, next) {
     try {
-        res.clearCookie("access_token", {httpOnly: true}).status(200).json({
+        res.clearCookie("access_token", { httpOnly: true }).status(200).json({
             success: true,
             message: "Logout erfolgreich",
         });
