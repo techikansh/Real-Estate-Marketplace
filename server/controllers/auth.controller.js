@@ -49,7 +49,7 @@ export async function signin(req, res, next) {
             .cookie("access_token", token, {
                 httpOnly: true,
                 sameSite: "None",
-                secure: process.env.NODE_ENV === "production",
+                secure: process.env.NODE_ENV == "production",
             })
             .status(200)
             .json({
@@ -76,7 +76,7 @@ export async function google(req, res, next) {
                 .cookie("access_token", token, {
                     httpOnly: true,
                     sameSite: "None",
-                    secure: process.env.NODE_ENV === "production",
+                    secure: process.env.NODE_ENV == "production",
                 })
                 .status(200)
                 .json({
@@ -106,7 +106,7 @@ export async function google(req, res, next) {
                 .cookie("access_token", token, {
                     httpOnly: true,
                     sameSite: "None",
-                    secure: process.env.NODE_ENV === "production",
+                    secure: process.env.NODE_ENV == "production",
                 })
                 .status(200)
                 .json({
