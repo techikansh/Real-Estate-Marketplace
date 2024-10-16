@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import path from 'path';
 import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
 
 import authRouter from "./routes/auth.route.js";
@@ -15,7 +15,7 @@ dotenv.config();
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = dirname(__filename);
 
 app.set('trust proxy', 1);
 app.use(express.json());
@@ -25,7 +25,8 @@ app.use(cors({
   origin: ["http://localhost:5173", "https://real-estate-marketplace-client.onrender.com"],
   credentials: true,
 }));
-app.use(express.static(path.join(__dirname, 'client/dist')));
+// app.use(express.static(join(__dirname, 'client/dist')));
+const clientDistPath = join(__dirname, '..', 'client', 'dist');
 
 
 
@@ -34,8 +35,12 @@ app.use("/api/auth", authRouter); // Auth route
 app.use("/api/user", userRouter); // User route
 app.use("/api/listing", listingRouter); // Listing route
 
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'client/dist/index.html'));
+// });
+
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/dist/index.html'));
+  res.sendFile(join(clientDistPath, 'index.html'));
 });
 
 
